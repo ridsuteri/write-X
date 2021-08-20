@@ -25,6 +25,24 @@ User.prototype.cleanUp = function () {
   };
 };
 
+User.prototype.login = function () {
+  return new Promise((resolve, reject) => {
+    this.cleanUp();
+    usersCollection
+      .findOne({ username: this.data.username })
+      .then((attemptedUser) => {
+        if (attemptedUser && attemptedUser.password == this.data.password) {
+          resolve("Congrats!");
+        } else {
+          reject("Invalid username / password.");
+        }
+      })
+      .catch(function () {
+        reject("Please try again later.");
+      });
+  });
+};
+
 User.prototype.validate = function () {
   if (this.data.username == "") {
     this.errors.push("You must provide a username.");
