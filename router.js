@@ -17,5 +17,6 @@ router.get(
 );
 
 router.post('/create-post',userController.mustBeLoggedIn,postController.create)
+router.get('/view-all-posts',userController.mustBeLoggedIn,postController.viewAllPosts)
 
 module.exports = router;
