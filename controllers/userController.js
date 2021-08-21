@@ -16,12 +16,23 @@ exports.login = function (req, res) {
     .login()
     .then(function (result) {
       req.session.user = {username:user.data.username}
-      res.send(result);
+      req.session.save(function(){
+        res.redirect('/')
+      })
+      // res.send(result);
     })
     .catch(function (e) {
       res.send(e);
     });
 };
+
+exports.logout = function(req,res){
+  req.session.destroy(function(){
+    res.redirect('/')
+  })
+  // res.send("Successfully Logged out")
+  
+}
 
 exports.home = function (req, res) {
   if(req.session.user){
