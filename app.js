@@ -1,6 +1,7 @@
 const express = require("express");
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
+const flash = require('connect-flash')
 const dotenv = require("dotenv");
 
 dotenv.config();
@@ -17,6 +18,7 @@ let sessionOptions = session({
 const port = 3000 || process.env.PORT;
 const router = require("./router");
 
+app.use(flash())
 app.use(sessionOptions);
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
