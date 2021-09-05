@@ -16,19 +16,3 @@ exports.create = function(req, res) {
           req.session.save(() => res.redirect("/create-post"))
         });
 };
-
-exports.viewAllPosts = async function(req, res) {
-   let post = new Post();
-    try {
-        post
-            .viewAll()
-            .then(function(posts) {
-                res.render("view-all-posts", { posts: posts });
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-    } catch {
-        res.render("404");
-    }
-};

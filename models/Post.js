@@ -59,16 +59,4 @@ Post.prototype.create = function() {
     });
 };
 
-Post.prototype.viewAll = function() {
-    return new Promise(async function(resolve, reject) {
-        let post = await postsCollecetion.find({}).toArray();
-        console.log(post);
-        if (post) {
-            resolve(post);
-        } else {
-            reject();
-        }
-    });
-};
-
 module.exports = Post;
