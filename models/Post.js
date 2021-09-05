@@ -9,16 +9,11 @@ Post.prototype.cleanUp = function() {
     if (typeof this.data.title != "string") {
         this.data.title = "";
     }
-    if (typeof this.data.location != "string") {
-        this.data.location = "";
-    }
 
     //   reject garbage properties
     this.data = {
         title: this.data.title.trim(),
-        location: this.data.location.trim(),
-        date: this.data.date,
-        description: this.data.description,
+        body: this.data.body.trim(),
         createdDate: new Date(),
     };
 };
@@ -27,14 +22,9 @@ Post.prototype.validate = function() {
     if (this.data.title == "") {
         this.errors.push("Please provide Title");
     }
-    if (this.data.location == "") {
-        this.errors.push("Please provide Location");
-    }
-    if (this.data.date == "") {
-        this.errors.push("Please provide Date");
-    }
-    if (this.data.description == "") {
-        this.errors.push("Please provide a short Description");
+    
+    if (this.data.body == "") {
+        this.errors.push("Please provide the body");
     }
 };
 

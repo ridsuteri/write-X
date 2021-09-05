@@ -9,7 +9,7 @@ exports.create = function(req, res) {
         .create()
         .then(function() {
           req.flash("success", "New event successfully added")
-          req.session.save(() => res.redirect(`/view-all-posts`))
+          req.session.save(() => res.redirect(`/`))
         })
         .catch(function(errors) {
           errors.forEach(error => req.flash("errors", error))

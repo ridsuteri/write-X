@@ -3,26 +3,16 @@
   <div class="container py-md-5 container--narrow">
     <form action="/create-post" method="POST">
       <div class="form-group">
-        <label for="event-title" class="text-muted mb-1"><small>Title</small></label>
-        <input required name="title" id="event-title" class="form-control form-control-lg form-control-title" type="text" placeholder="" autocomplete="off">
+        <label for="post-title" class="text-muted mb-1"><small>Title</small></label>
+        <input required name="title" id="post-title" class="form-control form-control-lg form-control-title" type="text" placeholder="" autocomplete="off">
       </div>
       
       <div class="form-group">
-        <label for="event-location" class="text-muted mb-1"><small>Location</small></label>
-        <input required name="location" id="event-location" class="form-control form-control-lg form-control-title" type="text" placeholder="" autocomplete="off">
-      </div>
-
-      <div class="form-group">
-        <label for="event-date" class="text-muted mb-1"><small>Date</small></label>
-        <input required name="date" id="event-date" class="form-control form-control-lg form-control-title" type="date" placeholder="" autocomplete="off">
-      </div>
-
-      <div class="form-group">
-        <label for="even-description" class="text-muted mb-1"><small>Event Description</small></label>
-        <textarea required name="description" id="even-description" class="body-content  form-control" type="text"></textarea>
+        <label for="post-body" class="text-muted mb-1"><small>Body</small></label>
+        <textarea required name="body" id="post-body" class="body-content tall-textarea form-control" type="text"></textarea>
       </div>
       
-      <button class="btn btn-primary">Add New Event</button>
+      <button class="btn btn-primary">Post</button>
     </form>
   </div>
   
