@@ -1,0 +1,34 @@
+<%- include('includes/header') %>
+
+    <div class="container py-md-5">
+        <h2 class="text-center mb-4">All Listed Events ! </h2>
+        <% if(posts.length == 0) { %>
+            <h3 class="text-center text-danger"> 0 Events Available </h3>
+
+            <% } else {%>
+              <h5 class="text-center text-success"> <%= posts.length %> Events Available </h5>
+                <% for (let p of posts) { %>
+                    <div class="list-group my-4">
+                        <div class="card text-center bg-dark text-light">
+                            <div class="card-header">
+                                <%= p.title %>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    At <%= p.location %> On <strong><%= p.date %></strong> </h5>
+                                <p class="card-text text-muted">
+                                    <%= p.description %>
+                                </p>
+                                <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
+                            </div>
+                            <div class="card-footer text-muted">
+                                Posted on : <%= p.createdDate %>
+                            </div>
+                        </div>
+                    </div>
+                    <% } %>
+                        <% } %>
+
+    </div>
+
+    <%- include('includes/footer') %>
