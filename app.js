@@ -1,10 +1,8 @@
 const express = require("express");
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
-const flash = require('connect-flash')
+const flash = require("connect-flash");
 const dotenv = require("dotenv");
-
-dotenv.config();
 const app = express();
 
 let sessionOptions = session({
@@ -12,20 +10,19 @@ let sessionOptions = session({
   store: new MongoStore({ client: require("./db") }),
   resave: false,
   saveUninitialized: false,
-  cookie: { maxAge: 1000 * 60 * 60 * 24, httpOnly: this.true },
+  cookie: { maxAge: 1000 * 60 * 60 * 24, httpOnly: true },
 });
-
-const port = 3000 || process.env.PORT;
-
 app.use(sessionOptions);
-app.use(function(req,res,next){
-  res.locals.user = req.session.user
-  next()
-})
+
+app.use(function (req, res, next) {
+  // console.log("Test - req.session.user: ~",req.session.user);
+  res.locals.user = req.session.user;
+  next();
+});
 
 const router = require("./router");
 
-app.use(flash())
+app.use(flash());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
