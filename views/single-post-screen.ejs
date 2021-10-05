@@ -12,8 +12,8 @@
     </div>
       
     <p class="text-muted small mb-4">
-      <a href="#"><img class="avatar-tiny" src="https://gravatar.com/avatar/?s=128"></a>
-      Posted by <a href="#">ridsuteri</a> on <%= post.createdDate.getMonth()+1 %>/<%= post.createdDate.getDate() %>/<%= post.createdDate.getFullYear() %></p>
+      <a href="#"><img class="avatar-tiny" src="<%= post.author.avatar%>"></a>
+      Posted by <a href="#"><%= post.author.username%></a> on <%= post.createdDate.getMonth()+1 %>/<%= post.createdDate.getDate() %>/<%= post.createdDate.getFullYear() %></p>
 
     <div class="body-content">
       <%= post.body %>
