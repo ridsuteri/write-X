@@ -5,6 +5,8 @@ const flash = require("connect-flash");
 const dotenv = require("dotenv");
 const app = express();
 
+app.use(flash());
+
 let sessionOptions = session({
   secret: process.env.SESSION_SECRET,
   store: new MongoStore({ client: require("./db") }),
@@ -16,13 +18,24 @@ app.use(sessionOptions);
 
 app.use(function (req, res, next) {
   // console.log("Test - req.session.user: ~",req.session.user);
+  // make error and success flash messages to templates
+  res.locals.errors = req.flash("errors");
+  res.locals.success = req.flash("success");
+
+  // make current user id available on the req object
+  if (req.session.user) 
+    req.visitorId = req.session.user._id;
+  else
+    req.visitorId = 0;
+
+  // make user session data from within view templates
   res.locals.user = req.session.user;
   next();
 });
 
 const router = require("./router");
 
-app.use(flash());
+
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 

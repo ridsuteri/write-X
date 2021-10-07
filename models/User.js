@@ -124,7 +124,7 @@ User.prototype.register = function () {
       let salt = bcrypt.genSaltSync(10);
       this.data.password = bcrypt.hashSync(this.data.password, salt);
       await usersCollection.insertOne(this.data);
-      this.data = attemptedUser;
+      // this.data = attemptedUser;
       this.getAvatar();
       resolve();
     } else {

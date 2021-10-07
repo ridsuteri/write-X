@@ -72,7 +72,6 @@ exports.home = function (req, res) {
     res.render("home-dashboard");
   } else {
     res.render("home-guest", {
-      errors: req.flash("errors"),
       regErrors: req.flash("regErrors"),
     });
   }
