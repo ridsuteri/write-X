@@ -2,11 +2,11 @@ const postsCollection = require("../db").db().collection("posts");
 const ObjectID = require("mongodb").ObjectId;
 const User = require("./User");
 
-let Post = function (data, userid,requestedPostId) {
+let Post = function (data, userid, requestedPostId) {
   this.data = data;
   this.errors = [];
   this.userid = userid;
-  this.requestedPostId  = requestedPostId;
+  this.requestedPostId = requestedPostId;
 };
 
 Post.prototype.cleanUp = function () {
@@ -46,8 +46,9 @@ Post.prototype.create = function () {
     if (!this.errors.length) {
       postsCollection
         .insertOne(this.data)
-        .then(() => {
-          resolve();
+        .then((info) => {
+          // console.log(info.insertedId);
+          resolve(info.insertedId);
         })
         .catch(() => {
           this.errors.push("Something went wrong!");
@@ -62,34 +63,37 @@ Post.prototype.create = function () {
 Post.prototype.update = function () {
   return new Promise(async (resolve, reject) => {
     try {
-      let post = await Post.findSingleById(this.requestedPostId, this.userid)
+      let post = await Post.findSingleById(this.requestedPostId, this.userid);
       if (post.isVisitorOwner) {
         // actually update the db
-        let status = await this.actuallyUpdate()
-        resolve(status)
+        let status = await this.actuallyUpdate();
+        resolve(status);
       } else {
-        reject()
+        reject();
       }
     } catch {
-      reject()
+      reject();
     }
-  })
-}
+  });
+};
 
-Post.prototype.actuallyUpdate = function() {
+Post.prototype.actuallyUpdate = function () {
   return new Promise(async (resolve, reject) => {
-    this.cleanUp()
-    this.validate()
+    this.cleanUp();
+    this.validate();
     if (!this.errors.length) {
-      await postsCollection.findOneAndUpdate({_id: new ObjectID(this.requestedPostId)}, {$set: {title: this.data.title, body: this.data.body}})
-      resolve("success")
+      await postsCollection.findOneAndUpdate(
+        { _id: new ObjectID(this.requestedPostId) },
+        { $set: { title: this.data.title, body: this.data.body } }
+      );
+      resolve("success");
     } else {
-      resolve("failure")
+      resolve("failure");
     }
-  })
-}
+  });
+};
 
-Post.reusablePostQuery = function (uniqueOperations,visitorId) {
+Post.reusablePostQuery = function (uniqueOperations, visitorId) {
   return new Promise(async function (resolve, reject) {
     let aggOperations = uniqueOperations.concat([
       {
@@ -116,12 +120,15 @@ Post.reusablePostQuery = function (uniqueOperations,visitorId) {
     // clean up author property in each post object
     posts = posts.map(function (post) {
       post.isVisitorOwner = post.authorId.equals(visitorId);
+
       post.author = {
         username: post.author.username,
         avatar: new User(post.author, true).avatar,
       };
+
       return post;
     });
+
     resolve(posts);
   });
 };
@@ -133,9 +140,10 @@ Post.findSingleById = function (id, visitorId) {
       return;
     }
 
-    let posts = await Post.reusablePostQuery([
-      { $match: { _id: new ObjectID(id) } },
-    ],visitorId);
+    let posts = await Post.reusablePostQuery(
+      [{ $match: { _id: new ObjectID(id) } }],
+      visitorId
+    );
 
     if (posts.length) {
       console.log(posts[0]);

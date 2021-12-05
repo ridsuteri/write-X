@@ -8,12 +8,12 @@ exports.create = function (req, res) {
   let post = new Post(req.body, req.session.user._id);
   post
     .create()
-    .then(function () {
-      req.flash("success", "New event successfully added");
-      req.session.save(() => res.redirect("/"));
+    .then(function (newId) {
+      req.flash("success", "New post successfully created");
+      req.session.save(() => res.redirect(`/post/${newId}`));
     })
     .catch(function (errors) {
-      console.log(errors);
+      // console.log(errors);
       errors.forEach((error) => req.flash("errors", error));
       req.session.save(() => res.redirect("/create-post"));
     });
@@ -42,7 +42,7 @@ exports.viewEditScreen = async function (req, res) {
   }
 };
 
-exports.edit = async function (req, res) {
+exports.edit = function (req, res) {
   let post = new Post(req.body, req.visitorId, req.params.id);
   post
     .update()
