@@ -3,6 +3,8 @@ const session = require("express-session");
 const MongoStore = require("connect-mongo");
 const flash = require("connect-flash");
 const dotenv = require("dotenv");
+const marked = require("marked");
+const sanitizeHTML = require("sanitize-html");
 const app = express();
 
 app.use(flash());
@@ -17,6 +19,11 @@ let sessionOptions = session({
 app.use(sessionOptions);
 
 app.use(function (req, res, next) {
+  // make markdown available from templates
+  res.locals.filterUserHTML = function(content) {
+    return sanitizeHTML(marked.parse(content), {allowedTags: ['p', 'br', 'ul', 'ol', 'li', 'strong', 'bold', 'i', 'em', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6','\r','\n'], allowedAttributes: {}})
+  }
+
   // console.log("Test - req.session.user: ~",req.session.user);
   // make error and success flash messages to templates
   res.locals.errors = req.flash("errors");

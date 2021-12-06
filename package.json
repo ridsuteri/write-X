@@ -22,6 +22,7 @@
     "md5": "^2.3.0",
     "mongodb": "^4.1.0",
     "nodemon": "^2.0.12",
+    "sanitize-html": "^2.6.0",
     "validator": "^13.6.0"
   }
 }
