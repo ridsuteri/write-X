@@ -1,4 +1,4 @@
-const Follow = require('../models/follow');
+const Follow = require('../models/Follow');
 
 exports.addFollow = function(req, res) {
     let follow = new Follow(req.params.username, req.visitorId);
