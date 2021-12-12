@@ -20,9 +20,30 @@ app.use(sessionOptions);
 
 app.use(function (req, res, next) {
   // make markdown available from templates
-  res.locals.filterUserHTML = function(content) {
-    return sanitizeHTML(marked.parse(content), {allowedTags: ['p', 'br', 'ul', 'ol', 'li', 'strong', 'bold', 'i', 'em', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6','\r','\n'], allowedAttributes: {}})
-  }
+  res.locals.filterUserHTML = function (content) {
+    return sanitizeHTML(marked.parse(content), {
+      allowedTags: [
+        "p",
+        "br",
+        "ul",
+        "ol",
+        "li",
+        "strong",
+        "bold",
+        "i",
+        "em",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "\r",
+        "\n",
+      ],
+      allowedAttributes: {},
+    });
+  };
 
   // console.log("Test - req.session.user: ~",req.session.user);
   // make error and success flash messages to templates
@@ -30,10 +51,8 @@ app.use(function (req, res, next) {
   res.locals.success = req.flash("success");
 
   // make current user id available on the req object
-  if (req.session.user) 
-    req.visitorId = req.session.user._id;
-  else
-    req.visitorId = 0;
+  if (req.session.user) req.visitorId = req.session.user._id;
+  else req.visitorId = 0;
 
   // make user session data from within view templates
   res.locals.user = req.session.user;
@@ -41,7 +60,6 @@ app.use(function (req, res, next) {
 });
 
 const router = require("./router");
-
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
@@ -52,4 +70,23 @@ app.set("view engine", "ejs");
 
 app.use("/", router);
 
-module.exports = app;
+const server = require('http').createServer(app)
+const io = require('socket.io')(server)
+
+io.use(function(socket, next) {
+  sessionOptions(socket.request, socket.request.res, next)
+})
+
+io.on('connection', function(socket) {
+  if (socket.request.session.user) {
+    let user = socket.request.session.user
+
+    socket.emit('welcome', {username: user.username, avatar: user.avatar})
+
+    socket.on('chatMessageFromBrowser', function(data) {
+      socket.broadcast.emit('chatMessageFromServer', {message: sanitizeHTML(data.message, {allowedTags: [], allowedAttributes: {}}), username: user.username, avatar: user.avatar})
+    })
+  }
+})
+
+module.exports = server;

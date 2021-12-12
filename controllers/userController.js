@@ -95,7 +95,7 @@ exports.home = async function (req, res) {
   if (req.session.user) {
     // fetch feed of posts for current user
     let posts = await Post.getFeed(req.session.user._id)
-    res.render("home-dashboard", {posts: posts});
+    res.render("home-dashboard", {posts: posts, title: "Feed | ProjectX"});
   } else {
     res.render("home-guest", {
       regErrors: req.flash("regErrors"),
@@ -122,6 +122,7 @@ exports.profilePostsScreen = function (req, res, next) {
     .then(function (posts) {
       res.render("profile", {
         currentPage: "posts",
+        title:` Profile for ${req.profileUser.username}`,
         posts: posts,
         profileUsername: req.profileUser.username,
         profileAvatar: req.profileUser.avatar,
@@ -140,6 +141,7 @@ exports.profileFollowersScreen = async function(req, res) {
     let followers = await Follow.getFollowersById(req.profileUser._id)
     res.render('profile-followers', {
       currentPage: "followers",
+      title:` Followers of ${req.profileUser.username}`,
       followers: followers,
       profileUsername: req.profileUser.username,
       profileAvatar: req.profileUser.avatar,
@@ -157,6 +159,7 @@ exports.profileFollowingScreen = async function(req, res) {
     let following = await Follow.getFollowingById(req.profileUser._id)
     res.render('profile-following', {
       currentPage: "following",
+      title:` Followings of ${req.profileUser.username}`,
       following: following,
       profileUsername: req.profileUser.username,
       profileAvatar: req.profileUser.avatar,
