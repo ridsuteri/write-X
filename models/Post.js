@@ -23,8 +23,14 @@ Post.prototype.cleanUp = function () {
   //   reject garbage properties
   console.log(this.userid);
   this.data = {
-    title: sanitizeHTML(this.data.title.trim(),{allowedTags: [],allowedAttributes: {}}),
-    body: sanitizeHTML(this.data.body.trim(),{allowedTags: [],allowedAttributes: {}}),
+    title: sanitizeHTML(this.data.title.trim(), {
+      allowedTags: [],
+      allowedAttributes: {},
+    }),
+    body: sanitizeHTML(this.data.body.trim(), {
+      allowedTags: [],
+      allowedAttributes: {},
+    }),
     createdDate: new Date(),
     author: ObjectID(this.userid),
   };
@@ -123,6 +129,7 @@ Post.reusablePostQuery = function (uniqueOperations, visitorId) {
     posts = posts.map(function (post) {
       post.isVisitorOwner = post.authorId.equals(visitorId);
 
+      post.authorId = undefined;
       post.author = {
         username: post.author.username,
         avatar: new User(post.author, true).avatar,
@@ -186,19 +193,36 @@ Post.countPostsByAuthor = function (id) {
   });
 };
 
-Post.getFeed = async function(id) {
+Post.getFeed = async function (id) {
   // create an array of the user ids that the current user follows
-  let followedUsers = await followsCollection.find({authorId: new ObjectID(id)}).toArray()
-  followedUsers = followedUsers.map(function(followDoc) {
-    return followDoc.followedId
-  })
+  let followedUsers = await followsCollection
+    .find({ authorId: new ObjectID(id) })
+    .toArray();
+  followedUsers = followedUsers.map(function (followDoc) {
+    return followDoc.followedId;
+  });
 
   // look for posts where the author is in the above array of followed users
   return Post.reusablePostQuery([
-    {$match: {author: {$in: followedUsers}}},
-    {$sort: {createdDate: -1}}
-  ])
-}
-        
+    { $match: { author: { $in: followedUsers } } },
+    { $sort: { createdDate: -1 } },
+  ]);
+};
+
+Post.search = function (searchTerm) {
+  return new Promise(async (resolve, reject) => {
+    if (typeof searchTerm == "string") {
+      // sort by search score (or relevancy to search string)
+      let posts = await Post.reusablePostQuery([
+        { $match: { $text: { $search: searchTerm } } },
+        { $project: { _id: true,  "score": false } },
+        { $sort: { score: { $meta: "textScore" } } },
+      ]);
+      resolve(posts);
+    } else {
+      reject();
+    }
+  });
+};
 
 module.exports = Post;

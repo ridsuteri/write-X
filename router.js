@@ -59,6 +59,7 @@ router.post(
   userController.mustBeLoggedIn,
   postController.delete
 );
+router.post('/search', postController.search)
 
 // follow related routes
 router.post('/addFollow/:username', userController.mustBeLoggedIn, followController.addFollow);
