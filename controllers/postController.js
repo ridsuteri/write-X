@@ -53,7 +53,7 @@ exports.edit = function (req, res) {
         // post was updated in db
         req.flash("success", "Post successfully updated.");
         req.session.save(function () {
-          res.redirect(`/post/${req.params.id}/edit`);
+          res.redirect(`/post/${req.params.id}`);
         });
       } else {
         post.errors.forEach(function (error) {

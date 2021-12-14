@@ -14,6 +14,7 @@
         <textarea required name="body" id="post-body" class="body-content tall-textarea form-control" type="text"><%= post.body %></textarea>
       </div>
       
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
       <button class="btn btn-primary">Update</button>
     </formc>
   </div>
