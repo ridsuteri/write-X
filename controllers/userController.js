@@ -1,6 +1,9 @@
 const User = require("../models/User");
 const Post = require("../models/Post");
 const Follow = require('../models/Follow')
+const sendGrid = require('@sendgrid/mail')
+
+sendGrid.setApiKey(process.env.SENDGRIDAPIKEY)
 
 exports.mustBeLoggedIn = function (req, res, next) {
   if (req.session.user) {
@@ -43,9 +46,23 @@ exports.register = function (req, res) {
     .then(() => {
       req.session.user = {
         username: user.data.username,
+        email: user.data.email,
         avatar: user.avatar,
         _id: user.data._id,
       };
+      // console.log(req.session.user.email);
+      sendGrid.send({
+          to: req.session.user.email,
+          from: 'contact@ridsuteri.me' ,
+          subject: 'Welcome to WritX',
+          html: `<h2>Hola 👋👋 <strong>${req.session.user.username}</strong></h2>
+          <h4>Welcome to WritX, the place to write and share your stories.</h4>
+          <h5>We hope you enjoy your time here.</h5>
+          <h5> You can start creating the post <a href="http://writx.herokuapp.com/create-post">here</a>  </h5>
+          <h6>Request a feature or report a bug <a href="mailto:contact@ridsuteri.me">@contact@ridsuteri.me </a> </h6>
+          
+          `
+        })
       req.session.save(function () {
         res.redirect("/");
       });
@@ -69,6 +86,7 @@ exports.login = function (req, res) {
       req.session.user = {
         avatar: user.avatar,
         username: user.data.username,
+        email: user.data.email,
         _id: user.data._id,
       };
       req.session.save(function () {
@@ -95,7 +113,7 @@ exports.home = async function (req, res) {
   if (req.session.user) {
     // fetch feed of posts for current user
     let posts = await Post.getFeed(req.session.user._id)
-    res.render("home-dashboard", {posts: posts, title: "Feed | ProjectX"});
+    res.render("home-dashboard", {posts: posts, title: "Feed"});
   } else {
     res.render("home-guest", {
       regErrors: req.flash("regErrors"),

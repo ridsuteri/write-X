@@ -129,8 +129,9 @@ Post.reusablePostQuery = function (uniqueOperations, visitorId) {
     posts = posts.map(function (post) {
       post.isVisitorOwner = post.authorId.equals(visitorId);
 
-      post.authorId = undefined;
+      // post.authorId = undefined;
       post.author = {
+        email: post.author.email,
         username: post.author.username,
         avatar: new User(post.author, true).avatar,
       };
@@ -155,7 +156,7 @@ Post.findSingleById = function (id, visitorId) {
     );
 
     if (posts.length) {
-      console.log(posts[0]);
+      // console.log(posts[0]);
       resolve(posts[0]);
     } else {
       reject();

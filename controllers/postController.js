@@ -1,5 +1,7 @@
 const Post = require("../models/Post");
+const sendGrid = require('@sendgrid/mail')
 
+sendGrid.setApiKey(process.env.SENDGRIDAPIKEY)
 exports.viewCreateScreen = function (req, res) {
   res.render("create-post",{title: "Create Post"});
 };
@@ -9,6 +11,15 @@ exports.create = function (req, res) {
   post
     .create()
     .then(function (newId) {
+      // console.log(req.session.user)
+      sendGrid.send({
+        to: req.session.user.email,
+        from: 'contact@ridsuteri.me' ,
+        subject: 'New Post',
+        html: `<strong>Yay 🎉🎉 new post has been created.</strong>
+        <div>You can view it here: http://writx.herokuapp.com/post/${newId}</div>`
+      })
+
       req.flash("success", "New post successfully created");
       req.session.save(() => res.redirect(`/post/${newId}`));
     })
