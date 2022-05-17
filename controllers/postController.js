@@ -12,13 +12,13 @@ exports.create = function (req, res) {
     .create()
     .then(function (newId) {
       // console.log(req.session.user)
-      sendGrid.send({
-        to: req.session.user.email,
-        from: 'ridatwork@gmail.com' ,
-        subject: 'New Post',
-        html: `<strong>Yay 🎉🎉 new post has been created.</strong>
-        <div>You can view it here: http://write-x.herokuapp.com/post/${newId}</div>`
-      })
+      // sendGrid.send({
+      //   to: req.session.user.email,
+      //   from: 'ridatwork@gmail.com' ,
+      //   subject: 'New Post',
+      //   html: `<strong>Yay 🎉🎉 new post has been created.</strong>
+      //   <div>You can view it here: http://write-x.herokuapp.com/post/${newId}</div>`
+      // })
 
       req.flash("success", "New post successfully created");
       req.session.save(() => res.redirect(`/post/${newId}`));
