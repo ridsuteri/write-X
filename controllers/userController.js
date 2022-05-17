@@ -53,13 +53,13 @@ exports.register = function (req, res) {
       // console.log(req.session.user.email);
       sendGrid.send({
           to: req.session.user.email,
-          from: 'contact@ridsuteri.me' ,
-          subject: 'Welcome to WritX',
+          from: 'ridatwork@gmail.com' ,
+          subject: 'Welcome to Write-X',
           html: `<h2>Hola 👋👋 <strong>${req.session.user.username}</strong></h2>
-          <h4>Welcome to WritX, the place to write and share your stories.</h4>
+          <h4>Welcome to Write-X, the place to write and share your stories.</h4>
           <h5>We hope you enjoy your time here.</h5>
-          <h5> You can start creating the post <a href="http://writx.herokuapp.com/create-post">here</a>  </h5>
-          <h6>Request a feature or report a bug <a href="mailto:contact@ridsuteri.me">@contact@ridsuteri.me </a> </h6>
+          <h5> You can start creating the post <a href="http://writex.herokuapp.com/create-post">here</a>  </h5>
+          <h6>Request a feature or report a bug <a href="mailto:ridatwork@gmail.com">@ridatwork@gmail.com </a> </h6>
           
           `
         })

@@ -14,10 +14,10 @@ exports.create = function (req, res) {
       // console.log(req.session.user)
       sendGrid.send({
         to: req.session.user.email,
-        from: 'contact@ridsuteri.me' ,
+        from: 'ridatwork@gmail.com' ,
         subject: 'New Post',
         html: `<strong>Yay 🎉🎉 new post has been created.</strong>
-        <div>You can view it here: http://writx.herokuapp.com/post/${newId}</div>`
+        <div>You can view it here: http://write-x.herokuapp.com/post/${newId}</div>`
       })
 
       req.flash("success", "New post successfully created");
